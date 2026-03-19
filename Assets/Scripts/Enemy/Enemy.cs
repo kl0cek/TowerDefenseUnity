@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
         currentPath = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
     }
 
-    private void onEnable()
+    private void OnEnable()
     {
         _targetPositions = currentPath.GetWaypointPosition(1);
     }

@@ -14,7 +14,8 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        _targetPositions = currentPath.GetWaypointPosition(1);
+        _currentWaypoint = 0;
+        _targetPositions = currentPath.GetWaypointPosition(0);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

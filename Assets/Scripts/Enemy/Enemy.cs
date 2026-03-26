@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private Path currentPath;
+    [SerializeField] private EnemyData data;
+    private Path _currentPath;
     private Vector3 _targetPositions;
     private int _currentWaypoint;
 
     private void Awake()
     {
-        currentPath = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
+        _currentPath = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
     }
 
     private void OnEnable()
     {
         _currentWaypoint = 0;
-        _targetPositions = currentPath.GetWaypointPosition(0);
+        _targetPositions = _currentPath.GetWaypointPosition(0);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,15 +26,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _targetPositions, moveSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _targetPositions, data.speed * Time.deltaTime);
 
         float relativeDistance = (transform.position - _targetPositions).magnitude;
         if (relativeDistance < 0.1f)
         {
-            if (_currentWaypoint < currentPath.Waypoints.Length - 1)
+            if (_currentWaypoint < _currentPath.Waypoints.Length - 1)
             {
                 _currentWaypoint++;
-                _targetPositions = currentPath.GetWaypointPosition(_currentWaypoint);
+                _targetPositions = _currentPath.GetWaypointPosition(_currentWaypoint);
             }
             else
             {

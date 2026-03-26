@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8650547605476298060}
   - component: {fileID: 5555428124521812075}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1378406252391678146, guid: a319435c605ba41f88f3e0ab540fa9e6, type: 3}
+  m_Sprite: {fileID: 7819795421736181519, guid: b2e67eae2e5274746b6311f413e2c188, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

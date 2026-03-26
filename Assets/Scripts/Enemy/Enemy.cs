@@ -3,6 +3,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
+    public static event System.Action<Enemy> OnEnemyRemoved;
     private Path _currentPath;
     private Vector3 _targetPositions;
     private int _currentWaypoint;

@@ -32,11 +32,13 @@ public class Spawner : MonoBehaviour
     private void OnEnable()
     {
         Enemy.OnEnemyReachedEnd += HandleEnemyReachedEnd;
+        Enemy.OnEnemyRemoved += HandleEnemyRemoved;
     }
 
     private void OnDisable()
     {
         Enemy.OnEnemyReachedEnd -= HandleEnemyReachedEnd;
+
     }
 
     private void Start()
@@ -91,6 +93,11 @@ public class Spawner : MonoBehaviour
     }
 
     private void HandleEnemyReachedEnd(EnemyData data)
+    {
+        _enemiesRemoved++;
+    }
+
+    private void HandleEnemyRemoved(Enemy enemy)
     {
         _enemiesRemoved++;
     }

@@ -1,7 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewScriptableObjectScript", menuName = "Scriptable Objects/NewScriptableObjectScript")]
-public class NewScriptableObjectScript : ScriptableObject
+[CreateAssetMenu(fileName = "TowerData", menuName = "Scriptable Objects/TowerData")]
+public class TowerData : ScriptableObject
 {
-    
+    public float range;
+    public float damage;
+    public float fireRate;
+    public float projectileSpeed;
+    public float projectileDuration;
 }

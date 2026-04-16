@@ -1,10 +1,13 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
+    public static Action<int> OnWaveChanged;
     [SerializeField] private WaveData[] wavesData;
     private int _currentWaveIndex = 0;
+    private int _waveCounter = 0;
     private WaveData CurrentWave => wavesData[_currentWaveIndex];
     private float _spawnTimer;
     private int _spawnnedCounter;
@@ -35,6 +38,11 @@ public class Spawner : MonoBehaviour
     {
         Enemy.OnEnemyReachedEnd -= HandleEnemyReachedEnd;
     }
+
+    private void Start()
+    {
+        OnWaveChanged?.Invoke(_waveCounter);
+    }
     void Update()
     {
         if (_isWaveCooldown)
@@ -43,6 +51,8 @@ public class Spawner : MonoBehaviour
             if (_waveCooldown <= 0f)
             {
                 _currentWaveIndex = (_currentWaveIndex + 1) % wavesData.Length;
+                _waveCounter++;
+                OnWaveChanged?.Invoke(_waveCounter);
                 _spawnnedCounter = 0;
                 _enemiesRemoved = 0;
                 _spawnTimer = CurrentWave.spawnInterval;

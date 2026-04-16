@@ -1,8 +1,10 @@
 using UnityEngine;
+using System;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
+    public static event Action<EnemyData> OnEnemyReachedEnd;
     public static event System.Action<Enemy> OnEnemyRemoved;
     private Path _currentPath;
     private Vector3 _targetPositions;
@@ -18,13 +20,6 @@ public class Enemy : MonoBehaviour
         _currentWaypoint = 0;
         _targetPositions = _currentPath.GetWaypointPosition(0);
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, _targetPositions, data.speed * Time.deltaTime);
@@ -39,6 +34,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
+                OnEnemyReachedEnd?.Invoke(data);
                 gameObject.SetActive(false);
             }
         }

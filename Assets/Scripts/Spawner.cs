@@ -13,6 +13,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] private ObjectPooler flyPool;
     [SerializeField] private ObjectPooler riderPool;
     private Dictionary<EnemyType, ObjectPooler> _poolDictionary;
+
+    private float _timeBeetwenWaves = 2f;
+    private float _waveCooldown;
+    private bool _isWaveCooldown = false;
     private void Awake()
     {
         _poolDictionary = new Dictionary<EnemyType, ObjectPooler>()
@@ -22,19 +26,43 @@ public class Spawner : MonoBehaviour
             { EnemyType.Rider, riderPool }
         };
     }
+    private void OnEnable()
+    {
+        Enemy.OnEnemyReachedEnd += HandleEnemyReachedEnd;
+    }
+
+    private void OnDisable()
+    {
+        Enemy.OnEnemyReachedEnd -= HandleEnemyReachedEnd;
+    }
     void Update()
     {
-        _spawnTimer -= Time.deltaTime;
-        if (_spawnTimer <= 0 && _spawnnedCounter < CurrentWave.enemyPerWave)
+        if (_isWaveCooldown)
         {
-            _spawnTimer = CurrentWave.spawnInterval;
-            SpawnEnemy();
-            _spawnnedCounter++;
+            _waveCooldown -= Time.deltaTime;
+            if (_waveCooldown <= 0f)
+            {
+                _currentWaveIndex = (_currentWaveIndex + 1) % wavesData.Length;
+                _spawnnedCounter = 0;
+                _enemiesRemoved = 0;
+                _spawnTimer = CurrentWave.spawnInterval;
+                _isWaveCooldown = false;
+            }
         }
-        else if (_spawnnedCounter >= CurrentWave.enemyPerWave && _enemiesRemoved >= CurrentWave.enemyPerWave)
+        else
         {
-            _currentWaveIndex = (_currentWaveIndex + 1) % wavesData.Length;
-            _spawnnedCounter = 0;
+            _spawnTimer -= Time.deltaTime;
+            if (_spawnTimer <= 0 && _spawnnedCounter < CurrentWave.enemyPerWave)
+            {
+                _spawnTimer = CurrentWave.spawnInterval;
+                SpawnEnemy();
+                _spawnnedCounter++;
+            }
+            else if (_spawnnedCounter >= CurrentWave.enemyPerWave && _enemiesRemoved >= CurrentWave.enemyPerWave)
+            {
+                _isWaveCooldown = true;
+                _waveCooldown = _timeBeetwenWaves;
+            }
         }
     }
 
@@ -50,5 +78,10 @@ public class Spawner : MonoBehaviour
         {
             Debug.LogError($"No pool found for enemy type: {CurrentWave.enemyType}");
         }
+    }
+
+    private void HandleEnemyReachedEnd(EnemyData data)
+    {
+        _enemiesRemoved++;
     }
 }

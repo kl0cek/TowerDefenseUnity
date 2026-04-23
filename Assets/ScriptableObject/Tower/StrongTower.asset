@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78619719f8c01481991ff83b89f3de7c, type: 3}
-  m_Name: FastTower
+  m_Name: StrongTower
   m_EditorClassIdentifier: Assembly-CSharp::TowerData
-  range: 3.5
-  damage: 1
-  fireRate: 0.7
-  projectileSpeed: 10
-  projectileDuration: 2
+  range: 3
+  damage: 2
+  fireRate: 1
+  projectileSpeed: 4
+  projectileDuration: 3

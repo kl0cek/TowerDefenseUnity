@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Enemy_Rider
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   lives: 10
-  speed: 5
+  speed: 4
   damage: 2
+  reward: 3

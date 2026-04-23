@@ -11,10 +11,13 @@ public class Enemy : MonoBehaviour
     private int _currentWaypoint;
 
     private float _lives;
+    [SerializeField] private Transform _healthBar;
+    private Vector3 _healthBarScale;
 
     private void Awake()
     {
         _currentPath = GameObject.FindGameObjectWithTag("Path").GetComponent<Path>();
+        _healthBarScale = _healthBar.localScale;
     }
 
     private void OnEnable()
@@ -22,6 +25,7 @@ public class Enemy : MonoBehaviour
         _currentWaypoint = 0;
         _targetPositions = _currentPath.GetWaypointPosition(0);
         _lives = data.lives;
+        UpdateHealthBar();
     }
     void Update()
     {
@@ -47,10 +51,19 @@ public class Enemy : MonoBehaviour
     {
         _lives -= damage;
         _lives = Mathf.Max(0, _lives);
+        UpdateHealthBar();
         if (_lives <= 0)
         {
             OnEnemyRemoved?.Invoke(this);
             gameObject.SetActive(false);
         }
+    }
+
+    private void UpdateHealthBar()
+    {
+        float healthPercent = _lives / data.lives;
+        Vector3 newScale = _healthBarScale;
+        newScale.x *= healthPercent;
+        _healthBar.localScale = newScale;
     }
 }

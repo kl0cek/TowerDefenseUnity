@@ -17,3 +17,6 @@ MonoBehaviour:
   fireRate: 0.03
   projectileSpeed: 8
   projectileDuration: 0.5
+  cost: 75
+  sprite: {fileID: -1401025463511422960, guid: b2e67eae2e5274746b6311f413e2c188, type: 3}
+  prefab: {fileID: 1305526294890306032, guid: 9afbc14be83d0429c801388bf5cc572f, type: 3}

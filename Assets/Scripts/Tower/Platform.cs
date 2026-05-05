@@ -6,8 +6,10 @@ public class Platform : MonoBehaviour
 {
     public static event System.Action<Platform> OnPlatformClicked;
     [SerializeField] private LayerMask platformLayerMask;
+    public static bool towerPanelOpen { get; set; } = false;
     private void Update()
     {
+        if (towerPanelOpen) return;
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());

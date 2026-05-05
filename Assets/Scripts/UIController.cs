@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -12,11 +13,16 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject towerPanel;
     [SerializeField] private GameObject towerCardsPrefabs;
     [SerializeField] private Transform cardsContainer;
-
     [SerializeField] private TowerData[] towerDatas;
     private List<GameObject> _towerCards = new List<GameObject>();
-
     private Platform _selectedPlatform;
+    [SerializeField] private Button speedOneButton;
+    [SerializeField] private Button speedTwoButton;
+    [SerializeField] private Button speedThreeButton;
+    [SerializeField] private Color normalButtonColor = Color.white;
+    [SerializeField] private Color selectedButtonColor = Color.green;
+    [SerializeField] private Color normalTextColor = Color.black;
+    [SerializeField] private Color selectedTextColor = Color.white;
 
     private void OnEnable()
     {
@@ -34,6 +40,15 @@ public class UIController : MonoBehaviour
         GameManager.OnResourcesChanged -= UpdateResourceText;
         Platform.OnPlatformClicked -= HandlePlatformClick;
         TowerCard.OnTowerCardSelected -= HandleTowerSelected;
+    }
+
+    private void Start()
+    {
+        speedOneButton.onClick.AddListener(() => SetGameSpeed(0.5f));
+        speedTwoButton.onClick.AddListener(() => SetGameSpeed(1f));
+        speedThreeButton.onClick.AddListener(() => SetGameSpeed(2f));
+
+        HighlightSelectedSpeedButton(GameManager.Instance.GameSpeed);
     }
 
     private void UpdateWaveText(int currentWave)
@@ -67,7 +82,7 @@ public class UIController : MonoBehaviour
     {
         towerPanel.SetActive(false);
         Platform.towerPanelOpen = false;
-        GameManager.Instance.SetTimeScale(1f);
+        GameManager.Instance.SetTimeScale(GameManager.Instance.GameSpeed);
     }
 
     private void PopulateTowerCards()
@@ -106,5 +121,28 @@ public class UIController : MonoBehaviour
         noResourcesText.SetActive(true);
         yield return new WaitForSeconds(3f);
         noResourcesText.SetActive(false);
+    }
+
+    private void SetGameSpeed(float speed)
+    {
+        HighlightSelectedSpeedButton(speed);
+        GameManager.Instance.SetGameSpeed(speed);
+    }
+
+    private void UpdateSpeedButtonColors(Button button, bool isSelected)
+    {
+        button.image.color = isSelected ? selectedButtonColor : normalButtonColor;
+
+        TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+        {
+            buttonText.color = isSelected ? selectedTextColor : normalTextColor;
+        }
+    }
+    private void HighlightSelectedSpeedButton(float selectedSpeed)
+    {
+        UpdateSpeedButtonColors(speedOneButton, selectedSpeed == 0.5f);
+        UpdateSpeedButtonColors(speedTwoButton, selectedSpeed == 1f);
+        UpdateSpeedButtonColors(speedThreeButton, selectedSpeed == 2f);
     }
 }

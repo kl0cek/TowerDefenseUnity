@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     private int _lifes = 10;
     private int _resources = 175;
     public int Resources => _resources;
+    private float _gameSpeed = 1f;
+    public float GameSpeed => _gameSpeed;
+
 
     private void Awake()
     {
@@ -54,10 +57,14 @@ public class GameManager : MonoBehaviour
         _resources += amount;
         OnResourcesChanged?.Invoke(_resources);
     }
-
-    public void SetTimeScale(float scale)
+    public void SetTimeScale(float scale) // This method is allowing for pausing and changing game speed in tower menu
     {
         Time.timeScale = scale;
+    }
+    public void SetGameSpeed(float speed) // This method is used to set the game speed, which can be used to speed up or slow down the game
+    {
+        _gameSpeed = speed;
+        SetTimeScale(_gameSpeed);
     }
 
     public void SpendResources(int amount)

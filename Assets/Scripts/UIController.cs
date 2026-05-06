@@ -3,6 +3,8 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -23,7 +25,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private Color selectedButtonColor = Color.green;
     [SerializeField] private Color normalTextColor = Color.black;
     [SerializeField] private Color selectedTextColor = Color.white;
-
+    [SerializeField] private GameObject pausePanel;
+    private bool _isPaused = false;
     private void OnEnable()
     {
         Spawner.OnWaveChanged += UpdateWaveText;
@@ -49,6 +52,14 @@ public class UIController : MonoBehaviour
         speedThreeButton.onClick.AddListener(() => SetGameSpeed(2f));
 
         HighlightSelectedSpeedButton(GameManager.Instance.GameSpeed);
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            TogglePause();
+        }
     }
 
     private void UpdateWaveText(int currentWave)
@@ -144,5 +155,43 @@ public class UIController : MonoBehaviour
         UpdateSpeedButtonColors(speedOneButton, selectedSpeed == 0.5f);
         UpdateSpeedButtonColors(speedTwoButton, selectedSpeed == 1f);
         UpdateSpeedButtonColors(speedThreeButton, selectedSpeed == 2f);
+    }
+
+    public void TogglePause()
+    {
+        if (towerPanel.activeSelf) return;
+        if (_isPaused)
+        {
+            pausePanel.SetActive(false);
+            _isPaused = false;
+            GameManager.Instance.SetTimeScale(GameManager.Instance.GameSpeed);
+        }
+        else
+        {
+            pausePanel.SetActive(true);
+            _isPaused = true;
+            GameManager.Instance.SetTimeScale(0f);
+        }
+    }
+
+    public void RestartGame()
+    {
+        GameManager.Instance.SetTimeScale(1f);
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public void MainMenu()
+    {
+        //GameManager.Instance.LoadMainMenu();
     }
 }

@@ -11,7 +11,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Text WaveText;
     [SerializeField] private TMP_Text LifeText;
     [SerializeField] private TMP_Text ResourceText;
-    [SerializeField] private GameObject noResourcesText;
+    [SerializeField] private TMP_Text warningText;
     [SerializeField] private GameObject towerPanel;
     [SerializeField] private GameObject towerCardsPrefabs;
     [SerializeField] private Transform cardsContainer;
@@ -121,6 +121,13 @@ public class UIController : MonoBehaviour
 
     private void HandleTowerSelected(TowerData towerData)
     {
+        if (_selectedPlatform.transform.childCount > 0)
+        {
+            HideTowerPanel();
+            StartCoroutine(ShowWarningMessage("This platform is already occupied!"));
+            return;
+        }
+
         if (GameManager.Instance.Resources >= towerData.cost)
         {
             GameManager.Instance.SpendResources(towerData.cost);
@@ -128,16 +135,17 @@ public class UIController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ShowNoResourcesText());
+            StartCoroutine(ShowWarningMessage("Not enough resources!"));
         }
         HideTowerPanel();
     }
 
-    private IEnumerator ShowNoResourcesText()
+    private IEnumerator ShowWarningMessage(string message)
     {
-        noResourcesText.SetActive(true);
+        warningText.text = message;
+        warningText.gameObject.SetActive(true);
         yield return new WaitForSeconds(3f);
-        noResourcesText.SetActive(false);
+        warningText.gameObject.SetActive(false);
     }
 
     private void SetGameSpeed(float speed)

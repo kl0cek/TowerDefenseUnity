@@ -4376,7 +4376,7 @@ GameObject:
   - component: {fileID: 1478982996}
   - component: {fileID: 1478982995}
   m_Layer: 5
-  m_Name: NoResourcesText
+  m_Name: WarningText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

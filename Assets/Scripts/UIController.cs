@@ -192,6 +192,7 @@ public class UIController : MonoBehaviour
 
     public void MainMenu()
     {
-        //GameManager.Instance.LoadMainMenu();
+        GameManager.Instance.SetTimeScale(1f);
+        SceneManager.LoadScene("MainMenu");
     }
 }

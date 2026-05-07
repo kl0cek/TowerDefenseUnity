@@ -2625,7 +2625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4086513425535806153, guid: c6e896f631e5143f9aeb670622814956, type: 3}
       propertyPath: m_Name
-      value: MainManuButton
+      value: MainMenuButton
       objectReference: {fileID: 0}
     - target: {fileID: 5445052588382061595, guid: c6e896f631e5143f9aeb670622814956, type: 3}
       propertyPath: m_Pivot.x

@@ -27,6 +27,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private Color selectedTextColor = Color.white;
     [SerializeField] private GameObject pausePanel;
     private bool _isPaused = false;
+    [SerializeField] private GameObject gameOverPanel;
     private void OnEnable()
     {
         Spawner.OnWaveChanged += UpdateWaveText;
@@ -69,6 +70,11 @@ public class UIController : MonoBehaviour
     private void UpdateLifeText(int currentLifes)
     {
         LifeText.text = $"Life: {currentLifes}";
+
+        if (currentLifes <= 0)
+        {
+            ShowGameOver();
+        }
     }
     private void UpdateResourceText(int currentResources)
     {
@@ -194,5 +200,11 @@ public class UIController : MonoBehaviour
     {
         GameManager.Instance.SetTimeScale(1f);
         SceneManager.LoadScene("MainMenu");
+    }
+
+    private void ShowGameOver()
+    {
+        GameManager.Instance.SetTimeScale(0f);
+        gameOverPanel.SetActive(true);
     }
 }

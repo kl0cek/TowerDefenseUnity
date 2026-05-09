@@ -226,7 +226,7 @@ public class UIController : MonoBehaviour
 
     private IEnumerator ShowObjectiveMessage(string message)
     {
-        objectiveText.text = $"Survive XXX waves of enemies!";
+        objectiveText.text = $"Survive {LevelManagment.Instance.currentLevelData.totalWaves} waves of enemies!";
         objectiveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(4f);
         objectiveText.gameObject.SetActive(false);

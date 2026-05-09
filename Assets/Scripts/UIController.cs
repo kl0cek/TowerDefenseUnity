@@ -28,6 +28,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     private bool _isPaused = false;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private TMP_Text objectiveText;
     private void OnEnable()
     {
         Spawner.OnWaveChanged += UpdateWaveText;
@@ -35,6 +36,7 @@ public class UIController : MonoBehaviour
         GameManager.OnResourcesChanged += UpdateResourceText;
         Platform.OnPlatformClicked += HandlePlatformClick;
         TowerCard.OnTowerCardSelected += HandleTowerSelected;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
@@ -44,6 +46,7 @@ public class UIController : MonoBehaviour
         GameManager.OnResourcesChanged -= UpdateResourceText;
         Platform.OnPlatformClicked -= HandlePlatformClick;
         TowerCard.OnTowerCardSelected -= HandleTowerSelected;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Start()
@@ -214,5 +217,18 @@ public class UIController : MonoBehaviour
     {
         GameManager.Instance.SetTimeScale(0f);
         gameOverPanel.SetActive(true);
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        StartCoroutine(ShowObjectiveMessage("Defend your base from incoming waves of enemies!"));
+    }
+
+    private IEnumerator ShowObjectiveMessage(string message)
+    {
+        objectiveText.text = $"Survive XXX waves of enemies!";
+        objectiveText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        objectiveText.gameObject.SetActive(false);
     }
 }

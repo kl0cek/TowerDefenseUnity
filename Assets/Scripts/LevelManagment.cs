@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManagment : MonoBehaviour
 {
@@ -16,7 +17,14 @@ public class LevelManagment : MonoBehaviour
         else
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         currentLevelData = levels[0];
+    }
+
+    public void LoadLevel(LevelData levelData)
+    {
+        currentLevelData = levelData;
+        SceneManager.LoadScene(levelData.levelName);
     }
 }

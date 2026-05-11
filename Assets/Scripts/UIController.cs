@@ -196,9 +196,7 @@ public class UIController : MonoBehaviour
 
     public void RestartGame()
     {
-        GameManager.Instance.SetTimeScale(1f);
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.buildIndex);
+        LevelManagment.Instance.LoadLevel(LevelManagment.Instance.currentLevelData);
     }
 
     public void QuitGame()

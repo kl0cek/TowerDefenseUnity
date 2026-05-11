@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using System;
 
 public class UIController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private Button speedTwoButton;
     [SerializeField] private Button speedThreeButton;
     [SerializeField] private Button pauseButton;
+    [SerializeField] private Button nextLevelButton;
     [SerializeField] private Color normalButtonColor = Color.white;
     [SerializeField] private Color selectedButtonColor = Color.green;
     [SerializeField] private Color normalTextColor = Color.black;
@@ -265,6 +267,7 @@ public class UIController : MonoBehaviour
 
     private void ShowMissionComplete()
     {
+        UpdateNextLevelButton();
         missionCompletePanel.SetActive(true);
         GameManager.Instance.SetTimeScale(0f);
     }
@@ -309,5 +312,24 @@ public class UIController : MonoBehaviour
         pausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
         missionCompletePanel.SetActive(false);
+    }
+
+    public void LoadNextLevel()
+    {
+        var levelManager = LevelManagment.Instance;
+        int currentIndex = Array.IndexOf(levelManager.levels, levelManager.currentLevelData);
+        int nextIndex = currentIndex + 1;
+        if (nextIndex < levelManager.levels.Length)
+        {
+            missionCompletePanel.SetActive(false);
+            levelManager.LoadLevel(levelManager.levels[nextIndex]);
+        }
+    }
+
+    private void UpdateNextLevelButton()
+    {
+        var levelManager = LevelManagment.Instance;
+        int currentIndex = Array.IndexOf(levelManager.levels, levelManager.currentLevelData);
+        nextLevelButton.interactable = currentIndex + 1 < levelManager.levels.Length;
     }
 }

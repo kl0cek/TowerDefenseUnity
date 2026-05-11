@@ -19,7 +19,6 @@ public class LevelManagment : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        currentLevelData = levels[0];
     }
 
     public void LoadLevel(LevelData levelData)

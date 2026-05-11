@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
     private void OnEnable()
@@ -92,6 +93,9 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ResetGame();
+        if (LevelManagment.Instance != null && LevelManagment.Instance.currentLevelData != null)
+        {
+            ResetGame();
+        }
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
+    public static UIController Instance { get; private set; }
     [SerializeField] private TMP_Text WaveText;
     [SerializeField] private TMP_Text LifeText;
     [SerializeField] private TMP_Text ResourceText;
@@ -21,6 +22,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private Button speedOneButton;
     [SerializeField] private Button speedTwoButton;
     [SerializeField] private Button speedThreeButton;
+    [SerializeField] private Button pauseButton;
     [SerializeField] private Color normalButtonColor = Color.white;
     [SerializeField] private Color selectedButtonColor = Color.green;
     [SerializeField] private Color normalTextColor = Color.black;
@@ -30,6 +32,19 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text objectiveText;
     [SerializeField] private GameObject missionCompletePanel;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
     private void OnEnable()
     {
         Spawner.OnWaveChanged += UpdateWaveText;
@@ -222,7 +237,22 @@ public class UIController : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        StartCoroutine(ShowObjectiveMessage("Defend your base from incoming waves of enemies!"));
+        Camera mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        Canvas canvas = FindObjectOfType<Canvas>();
+        canvas.worldCamera = mainCamera;
+
+        HidePanels();
+
+        if (scene.name == "MainMenu")
+        {
+            HideUI();
+        }
+        else
+        {
+            ShowUI();
+            StartCoroutine(ShowObjectiveMessage("Defend your base from incoming waves of enemies!"));
+        }
+
     }
 
     private IEnumerator ShowObjectiveMessage(string message)
@@ -244,5 +274,40 @@ public class UIController : MonoBehaviour
         missionCompletePanel.SetActive(false);
         GameManager.Instance.SetTimeScale(GameManager.Instance.GameSpeed);
         Spawner.Instance.EnableEndlessMode();
+    }
+
+    private void HideUI()
+    {
+        HidePanels();
+        WaveText.gameObject.SetActive(false);
+        LifeText.gameObject.SetActive(false);
+        ResourceText.gameObject.SetActive(false);
+        objectiveText.gameObject.SetActive(false);
+
+        speedOneButton.gameObject.SetActive(false);
+        speedTwoButton.gameObject.SetActive(false);
+        speedThreeButton.gameObject.SetActive(false);
+
+        pauseButton.gameObject.SetActive(false);
+    }
+
+    private void ShowUI()
+    {
+        WaveText.gameObject.SetActive(true);
+        LifeText.gameObject.SetActive(true);
+        ResourceText.gameObject.SetActive(true);
+
+        speedOneButton.gameObject.SetActive(true);
+        speedTwoButton.gameObject.SetActive(true);
+        speedThreeButton.gameObject.SetActive(true);
+
+        pauseButton.gameObject.SetActive(true);
+    }
+
+    private void HidePanels()
+    {
+        pausePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        missionCompletePanel.SetActive(false);
     }
 }

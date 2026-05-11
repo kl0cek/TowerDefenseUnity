@@ -240,4 +240,11 @@ public class UIController : MonoBehaviour
         missionCompletePanel.SetActive(true);
         GameManager.Instance.SetTimeScale(0f);
     }
+
+    public void EnterEndlessMode()
+    {
+        missionCompletePanel.SetActive(false);
+        GameManager.Instance.SetTimeScale(GameManager.Instance.GameSpeed);
+        Spawner.Instance.EnableEndlessMode();
+    }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
+    public static Spawner Instance { get; private set; }
     public static Action<int> OnWaveChanged;
     public static Action OnMissionComplete;
     [SerializeField] private WaveData[] wavesData;
@@ -21,6 +22,7 @@ public class Spawner : MonoBehaviour
     private float _timeBeetwenWaves = 2f;
     private float _waveCooldown;
     private bool _isWaveCooldown = false;
+    private bool _isEndlessMode = false;
     private void Awake()
     {
         _poolDictionary = new Dictionary<EnemyType, ObjectPooler>()
@@ -29,6 +31,15 @@ public class Spawner : MonoBehaviour
             { EnemyType.Fly, flyPool },
             { EnemyType.Rider, riderPool }
         };
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
     private void OnEnable()
     {
@@ -53,7 +64,7 @@ public class Spawner : MonoBehaviour
             _waveCooldown -= Time.deltaTime;
             if (_waveCooldown <= 0f)
             {
-                if (_waveCounter + 1 >= LevelManagment.Instance.currentLevelData.totalWaves)
+                if (_waveCounter + 1 >= LevelManagment.Instance.currentLevelData.totalWaves && !_isEndlessMode)
                 {
                     OnMissionComplete?.Invoke();
                     return;
@@ -91,7 +102,7 @@ public class Spawner : MonoBehaviour
             GameObject spawnedObject = pool.GetPooledObject();
             spawnedObject.transform.position = transform.position;
 
-            float healthMultiplier = 1f + (_waveCounter * 0.1f);
+            float healthMultiplier = 1f + (_waveCounter * 0.4f);
             Enemy enemy = spawnedObject.GetComponent<Enemy>();
             enemy.Initilize(healthMultiplier);
 
@@ -107,5 +118,10 @@ public class Spawner : MonoBehaviour
     private void HandleEnemyRemoved(Enemy enemy)
     {
         _enemiesRemoved++;
+    }
+
+    public void EnableEndlessMode()
+    {
+        _isEndlessMode = true;
     }
 }

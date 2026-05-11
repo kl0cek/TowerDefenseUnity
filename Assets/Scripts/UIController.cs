@@ -29,6 +29,7 @@ public class UIController : MonoBehaviour
     private bool _isPaused = false;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text objectiveText;
+    [SerializeField] private GameObject missionCompletePanel;
     private void OnEnable()
     {
         Spawner.OnWaveChanged += UpdateWaveText;
@@ -37,6 +38,7 @@ public class UIController : MonoBehaviour
         Platform.OnPlatformClicked += HandlePlatformClick;
         TowerCard.OnTowerCardSelected += HandleTowerSelected;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        Spawner.OnMissionComplete += ShowMissionComplete;
     }
 
     private void OnDisable()
@@ -47,6 +49,7 @@ public class UIController : MonoBehaviour
         Platform.OnPlatformClicked -= HandlePlatformClick;
         TowerCard.OnTowerCardSelected -= HandleTowerSelected;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        Spawner.OnMissionComplete -= ShowMissionComplete;
     }
 
     private void Start()
@@ -230,5 +233,11 @@ public class UIController : MonoBehaviour
         objectiveText.gameObject.SetActive(true);
         yield return new WaitForSeconds(4f);
         objectiveText.gameObject.SetActive(false);
+    }
+
+    private void ShowMissionComplete()
+    {
+        missionCompletePanel.SetActive(true);
+        GameManager.Instance.SetTimeScale(0f);
     }
 }

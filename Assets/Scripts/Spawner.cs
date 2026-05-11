@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Spawner : MonoBehaviour
 {
     public static Action<int> OnWaveChanged;
+    public static Action OnMissionComplete;
     [SerializeField] private WaveData[] wavesData;
     private int _currentWaveIndex = 0;
     private int _waveCounter = 0;
@@ -38,7 +39,7 @@ public class Spawner : MonoBehaviour
     private void OnDisable()
     {
         Enemy.OnEnemyReachedEnd -= HandleEnemyReachedEnd;
-
+        Enemy.OnEnemyRemoved -= HandleEnemyRemoved;
     }
 
     private void Start()
@@ -52,6 +53,11 @@ public class Spawner : MonoBehaviour
             _waveCooldown -= Time.deltaTime;
             if (_waveCooldown <= 0f)
             {
+                if (_waveCounter + 1 >= LevelManagment.Instance.currentLevelData.totalWaves)
+                {
+                    OnMissionComplete?.Invoke();
+                    return;
+                }
                 _currentWaveIndex = (_currentWaveIndex + 1) % wavesData.Length;
                 _waveCounter++;
                 OnWaveChanged?.Invoke(_waveCounter);

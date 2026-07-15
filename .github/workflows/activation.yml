@@ -1,0 +1,24 @@
+name: Acquire Unity activation file (.alf)
+
+# Jednorazowy workflow — uruchamiasz go ręcznie, pobierasz artifact .alf,
+# aktywujesz go na https://license.unity3d.com/manual i dostajesz .ulf,
+# ktory wrzucasz jako sekret UNITY_LICENSE. Potem ten plik mozesz usunac.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  activation:
+    name: Request manual activation file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request activation file
+        uses: game-ci/unity-request-activation-file@v2
+        id: getManualLicenseFile
+        with:
+          unityVersion: 6000.3.11f1
+
+      - name: Upload activation file
+        uses: actions/upload-artifact@v4
+        with:
+          name: Manual Activation File
+          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
